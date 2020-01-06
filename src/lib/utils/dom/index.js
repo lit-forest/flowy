@@ -1,6 +1,6 @@
-import { curry, partial, compose, emptyFun } from '../fun'
+import { curry, partial, compose } from '../fun'
 import IO from '../fp/IO'
-import Either, { either } from '../fp/Either'
+import Either from '../fp/Either'
 import { EitherIO, liftIO, runEitherIO } from '../fp/EitherIO'
 
 const query = (doc, num, selector) => {

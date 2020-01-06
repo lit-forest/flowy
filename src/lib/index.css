@@ -43,3 +43,9 @@
 .bottom {
     bottom: -6px;
 }
+
+
+.flow-svg {
+    z-index: 999;
+    pointer-events: none;
+}

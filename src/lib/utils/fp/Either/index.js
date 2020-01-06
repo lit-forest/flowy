@@ -1,4 +1,4 @@
-import { curry, id, emptyFun } from '../../fun'
+import { curry } from '../../fun'
 
 export const Right = x => ({
     chain: f => f(x),

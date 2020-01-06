@@ -1,13 +1,18 @@
-import { initSVG, drowBezierCurve, deleteLine } from './svg/index'
-import { Drag } from './drag/index'
+import { initSVG, drowBezierCurve, deleteLine } from './svg'
+import { Flow } from './drag'
 
 export const initFlowy = (canvasSelector) => {
     initSVG(canvasSelector)
-    new Drag(canvasSelector)
+    const flow = new Flow(canvasSelector)
+
+    return {
+        output: () => flow.tempBlockList,
+        import: output => flow.import(output)
+    }
 }
 
 export default {
     initSVG, drowBezierCurve, deleteLine,
-    Drag,
+    Flow,
     initFlowy
 }

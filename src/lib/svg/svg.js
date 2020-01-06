@@ -1,6 +1,5 @@
 import {
     SVG_NS,
-    SVG_ID,
     SVG_ATTR,
     SVG_NS_ATTR,
     MARKER_ATTR,
@@ -8,7 +7,7 @@ import {
     CRICLE_ATTR
 } from './constant'
 import { createElementNS, elementSize } from '../utils/dom'
-import { curry, partial, compose, emptyFun } from '../utils/fun'
+import { compose, emptyFun } from '../utils/fun'
 import { read } from '../utils/dom'
 import { either } from '../utils/fp/Either'
 import IO from '../utils/fp/IO'

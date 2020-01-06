@@ -32,4 +32,4 @@ export const bezierPath = (x1, y1, x2, y2, tension) => {
 }
 
 export const deleteLine = (id) =>
-    either(() => console.error(`没有找到对应id为: '${id}' 的line`), emptyFun)(removeNode(`#${id}`))
+    either(emptyFun, emptyFun)(removeNode(`#${id}`))

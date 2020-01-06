@@ -1,5 +1,6 @@
-
 import { initFlowy } from './lib'
 import './lib/index.css'
 
-initFlowy('.App')
+const flowy = initFlowy('.App')
+
+window.flowy = flowy

@@ -5,11 +5,12 @@ import { positionVerlapping, getOffset, getPositionAtCenter, getDistanceByXY } f
 import { setStyle, wrapNode, uuid } from './util'
 import { drowBezierCurve, deleteLine } from '../svg'
 
-export class Drag {
+export class Flow {
     constructor(selector) {
         this.canvas = document.querySelector(selector);
         this.tempBlockList = [];
         this.currPathUUID = null;
+        this.parentId = null;
 
         this.blockMouseDown = this.blockMouseDown.bind(this)
         this.handleTempBlcokDrag = this.handleTempBlcokDrag.bind(this)
@@ -52,6 +53,8 @@ export class Drag {
                     const temp = {
                         id: tempBlock.id,
                         element: tempBlock,
+                        childrenLine: [],
+                        parentsLine: [],
                         children: [],
                         parents: []
                     }
@@ -81,7 +84,7 @@ export class Drag {
     }
 
     handleTempBlcokDrag(block) {
-        const { element, id, parents, children } = block;
+        const { element, parentsLine, childrenLine } = block;
 
         const mousedown$ = fromEvent(element, 'mousedown')
         const mouseup$ = fromEvent(document, 'mouseup')
@@ -97,14 +100,13 @@ export class Drag {
                     })),
                     tap(({ left, top }) => {
                         const { left: canvasLeft, top: canvasTop } = getOffset(this.canvas)
-                        parents.forEach(parent => {
+                        parentsLine.forEach(parent => {
                             const parentWidth = element.offsetWidth
-                            const parentHeight = element.offsetHeight
                             parent.to = [left + parentWidth / 2 - canvasLeft, top - canvasTop]
                             drowBezierCurve(parent.id, parent.from[0], parent.from[1], left + parentWidth / 2 - canvasLeft, top - canvasTop)
                         })
 
-                        children.forEach(child => {
+                        childrenLine.forEach(child => {
                             const childWidth = element.offsetWidth
                             const childHeight = element.offsetHeight
                             child.from = [left + childWidth / 2 - canvasLeft, top + childHeight - canvasTop];
@@ -154,14 +156,15 @@ export class Drag {
                                 to: [pointerTopXY.x - canvasLeft, pointerTopXY.y - canvasTop],
                                 id: this.currPathUUID
                             }
-                            this.tempBlockList[i].parents.push(lineInfo)
+                            this.tempBlockList[i].parentsLine.push(lineInfo)
+                            this.tempBlockList[i].parents.push(this.parentId)
+
                             this.tempBlockList.forEach(block => {
                                 if (block.element === element) {
-                                    block.children.push(lineInfo)
+                                    block.childrenLine.push(lineInfo)
+                                    block.children.push(this.tempBlockList[i].element.id)
                                 }
                             })
-
-                            console.log(this.tempBlockList)
                             break
                         }
                     }
@@ -174,10 +177,11 @@ export class Drag {
         let mousemove$ = fromEvent(document, 'mousemove');
 
         let mousedrag$ = mousedown$.pipe(
-            map(({ offsetX, offsetY }) => {
-                this.currPathUUID = uuid('L')
-                return { offsetX, offsetY, id: this.currPathUUID }
+            tap(() => {
+                this.currPathUUID = uuid('L');
+                this.parentId = element.id
             }),
+            map(({ offsetX, offsetY }) => ({ offsetX, offsetY, id: this.currPathUUID })),
             mergeMap(({ offsetX, offsetY, id }) =>
                 mousemove$.pipe(
                     map(({ clientX, clientY }) => ({
@@ -189,11 +193,14 @@ export class Drag {
                 )));
 
         mousedrag$.subscribe(({ top, left, id }) => {
-
             const { left: canvasLeft, top: canvasTop } = getOffset(this.canvas)
             const { x, y } = getPositionAtCenter(point)
             drowBezierCurve(id, x - canvasLeft, y - canvasTop, left - canvasLeft, top - canvasTop)
         });
+    }
+
+    import(blockList) {
+
     }
 }
 
