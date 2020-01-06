@@ -1,5 +1,5 @@
-import { initSVG, drowBezierCurve, deleteLine } from './svg'
-import { Drag } from './drag'
+import { initSVG, drowBezierCurve, deleteLine } from './svg/index'
+import { Drag } from './drag/index'
 
 export const initFlowy = (canvasSelector) => {
     initSVG(canvasSelector)

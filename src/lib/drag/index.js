@@ -1,14 +1,9 @@
 import { fromEvent } from 'rxjs';
-import { map, filter, tap, delay, takeUntil, mergeMap } from 'rxjs/operators';
+import { map, filter, tap, takeUntil, mergeMap } from 'rxjs/operators';
 
-import { readAll, positionVerlapping, getOffset, getPositionAtCenter, getDistanceByXY } from '../utils/dom'
+import { positionVerlapping, getOffset, getPositionAtCenter, getDistanceByXY } from '../utils/dom'
 import { setStyle, wrapNode, uuid } from './util'
 import { drowBezierCurve, deleteLine } from '../svg'
-
-import IO from '../utils/fp/IO'
-import Either, { either } from '../utils/fp/Either'
-import { EitherIO, liftIO, runEitherIO } from '../utils/fp/EitherIO'
-import { compose } from '../utils/fun'
 
 export class Drag {
     constructor(selector) {
@@ -16,10 +11,15 @@ export class Drag {
         this.tempBlockList = [];
         this.currPathUUID = null;
 
+        this.blockMouseDown = this.blockMouseDown.bind(this)
+        this.handleTempBlcokDrag = this.handleTempBlcokDrag.bind(this)
+        this.handlePointDrag = this.handlePointDrag.bind(this)
+
         this.draggableBlocks = [...document.querySelectorAll('.flow-block')]
         this.draggableBlocks.forEach(this.blockMouseDown)
     }
-    blockMouseDown = (block) => {
+
+    blockMouseDown(block) {
         let tempBlock
         const blockMouseDown$ = fromEvent(block, 'mousedown')
             .pipe(
@@ -196,67 +196,4 @@ export class Drag {
         });
     }
 }
-
-// let canvas
-
-// export const getAllBlocks = () => {
-//     canvas = document.querySelector('.App')
-//     const blocks = [...document.querySelectorAll('.flow-block')]
-//     blocks.forEach(blockMouseDown)
-// }
-
-// export const blockMouseDown = (block) => {
-//     let tempBlock
-//     const blockMouseDown$ = fromEvent(block, 'mousedown')
-//         .pipe(
-//             map(ev => ({
-//                 startX: ev.offsetX,
-//                 startY: ev.offsetY,
-//                 original: ev.target
-//             })),
-//             tap(({ startX, startY, original }) => {
-//                 const sourceBlock = original.closest('.flow-block');
-//                 const { wrapper } = wrapNode(sourceBlock)
-//                 tempBlock = wrapper;
-//                 // tempBlock = sourceBlock.cloneNode(true);
-//                 const dragx = startX - (sourceBlock.offsetLeft);
-//                 const dragy = startY - (sourceBlock.offsetTop);
-//                 wrapper.classList.add('temp-block')
-//                 wrapper.style.left = startX - dragx + "px";
-//                 wrapper.style.top = startY - dragy + "px";
-//                 wrapper.id = uuid();
-//                 document.body.appendChild(wrapper);
-//             }))
-
-//     const mousemove$ = fromEvent(document, 'mousemove')
-//     const mouseup$ = fromEvent(document, 'mouseup')
-//         .pipe(
-//             tap(() => {
-//                 if (positionVerlapping(canvas, tempBlock)) {
-//                     const { left, top } = getOffset(canvas)
-//                     setStyle(tempBlock, left, top)
-//                     tempBlock.parentNode.removeChild(tempBlock)
-//                     canvas.appendChild(tempBlock)
-//                 } else {
-//                     tempBlock.parentNode.removeChild(tempBlock)
-//                 }
-//             })
-//         )
-
-//     const mousedrag$ = blockMouseDown$.pipe(
-//         mergeMap(({ startX, startY }) =>
-//             mousemove$.pipe(
-//                 map(({ clientX, clientY }) => ({
-//                     left: clientX - startX,
-//                     top: clientY - startY,
-//                 })),
-//                 takeUntil(mouseup$),
-//             )));
-
-//     mousedrag$.subscribe(state => {
-//         console.log(state)
-//         tempBlock.style.top = state.top + 'px'
-//         tempBlock.style.left = state.left + 'px'
-//     })
-// }
 

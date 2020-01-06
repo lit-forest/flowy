@@ -1,0 +1,57 @@
+* {
+    margin: 0;
+}
+
+.root {
+    display: flex;
+}
+
+.blocks {
+    width: 200px;
+    flex-shrink: 0;
+    background: gray;
+}
+
+.flow-block {
+    cursor: pointer;
+}
+
+.block {
+    height: 100px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.a {
+    background-color: forestgreen;
+}
+
+.b {
+    background-color: blueviolet;
+}
+
+.container {
+    width: 1000px;
+    height: 1000px;
+    flex-shrink: 0;
+    margin-left: 100px;
+    overflow: scroll;
+}
+
+.App {
+    position: relative;
+    height: 2000px;
+    width: 2000px;
+    background-color: antiquewhite;
+}
+
+.test {
+    position: absolute;
+    height: 100px;
+    width: 200px;
+    left: 300px;
+    top: 100px;
+    background: gold;
+}

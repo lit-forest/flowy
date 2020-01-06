@@ -1,0 +1,45 @@
+.temp-block {
+    position: absolute;
+    z-index: 9999;
+    user-select: none;
+}
+
+.flow-block-point {
+    position: absolute;
+    display: inline-block;
+    background: transparent;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: all .3s cubic-bezier(.05, .03, .35, 1);
+}
+
+.flow-block-point:hover {
+    background: #d43c33;
+}
+
+.flow-block-point:hover::after {
+    opacity: .2;
+}
+
+.flow-block-point::after {
+    content: "";
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: #d43c33;
+    transform: scale(2);
+    opacity: 0;
+    border-radius: 60px;
+}
+
+.top {
+    top: -6px;
+}
+
+.bottom {
+    bottom: -6px;
+}
