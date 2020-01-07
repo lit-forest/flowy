@@ -6,7 +6,7 @@ import {
     TRIANGEL_ATTR,
     CRICLE_ATTR
 } from './constant'
-import { createElementNS, elementSize } from '../utils/dom'
+import { createElementNS, getEleSize } from '../utils/dom'
 import { compose, emptyFun } from '../utils/fun'
 import { read } from '../utils/dom'
 import { either } from '../utils/fp/Either'
@@ -19,7 +19,7 @@ export const initSVG = (selector) =>
 export const append = domNode =>
     parentNode =>
         IO.of(() => {
-            setSVGSize(domNode, elementSize(parentNode))
+            setSVGSize(domNode, getEleSize(parentNode))
             parentNode.appendChild(domNode);
         })
 

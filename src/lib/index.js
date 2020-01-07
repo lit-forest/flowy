@@ -1,5 +1,7 @@
 import { initSVG, drowBezierCurve, deleteLine } from './svg'
 import { Flow } from './drag'
+import { removeNode } from './utils/dom'
+import { emptyFun } from './utils/fun'
 
 export const initFlowy = (canvasSelector) => {
     initSVG(canvasSelector)
@@ -11,7 +13,13 @@ export const initFlowy = (canvasSelector) => {
             lineList: JSON.stringify(flow.lineList),
             html: flow.canvas.innerHTML
         }),
-        import: output => flow.import(output)
+        import: output => flow.import(output),
+        clear: () => {
+            flow.tempBlockList.map(({ id }) => removeNode(`#${id}`))
+            flow.lineList.map(({ id }) => removeNode(`#${id}`))
+            flow.tempBlockList = []
+            flow.lineList = []
+        }
     }
 }
 

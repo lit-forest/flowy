@@ -27,11 +27,13 @@
     <div class="actions">
       <button id='output'>output</button>
       <button id='input'>input</button>
+      <button id='clear'>clear</button>
     </div>
   </div>
   <script>
     const output = document.querySelector('#output')
     const input = document.querySelector('#input')
+    const clear = document.querySelector('#clear')
 
     output.addEventListener('click', () => {
       const blockConten = flowy.output()
@@ -45,6 +47,11 @@
       const lineList = localStorage.getItem('lineList')
       const html = localStorage.getItem('html')
       flowy.import({ blockList, html, lineList })
+    })
+
+
+    clear.addEventListener('click', () => {
+      flowy.clear()
     })
   </script>
 </body>
