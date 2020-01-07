@@ -9,6 +9,7 @@ export class Flow {
     constructor(selector) {
         this.canvas = document.querySelector(selector);
         this.tempBlockList = [];
+        this.lineList = [];
         this.currPathUUID = null;
         this.parentId = null;
 
@@ -84,7 +85,7 @@ export class Flow {
     }
 
     handleTempBlcokDrag(block) {
-        const { element, parentsLine, childrenLine } = block;
+        const { element, parentsLine, childrenLine, parents, children } = block;
 
         const mousedown$ = fromEvent(element, 'mousedown')
         const mouseup$ = fromEvent(document, 'mouseup')
@@ -100,13 +101,17 @@ export class Flow {
                     })),
                     tap(({ left, top }) => {
                         const { left: canvasLeft, top: canvasTop } = getOffset(this.canvas)
-                        parentsLine.forEach(parent => {
+                        parentsLine.forEach(id => {
+                            const parent = this.lineList.find(item => item.id === id)
+
                             const parentWidth = element.offsetWidth
                             parent.to = [left + parentWidth / 2 - canvasLeft, top - canvasTop]
                             drowBezierCurve(parent.id, parent.from[0], parent.from[1], left + parentWidth / 2 - canvasLeft, top - canvasTop)
                         })
 
-                        childrenLine.forEach(child => {
+                        childrenLine.forEach(id => {
+                            const child = this.lineList.find(item => item.id === id)
+
                             const childWidth = element.offsetWidth
                             const childHeight = element.offsetHeight
                             child.from = [left + childWidth / 2 - canvasLeft, top + childHeight - canvasTop];
@@ -114,9 +119,7 @@ export class Flow {
                         })
                     }),
                     takeUntil(mouseup$),
-                ),
-            ),
-        );
+                )));
 
         mousedrag$.subscribe(({ top, left }) => {
             const { left: canvasLeft, top: canvasTop } = getOffset(this.canvas)
@@ -156,12 +159,13 @@ export class Flow {
                                 to: [pointerTopXY.x - canvasLeft, pointerTopXY.y - canvasTop],
                                 id: this.currPathUUID
                             }
-                            this.tempBlockList[i].parentsLine.push(lineInfo)
+                            this.lineList.push(lineInfo)
+                            this.tempBlockList[i].parentsLine.push(this.currPathUUID)
                             this.tempBlockList[i].parents.push(this.parentId)
 
                             this.tempBlockList.forEach(block => {
                                 if (block.element === element) {
-                                    block.childrenLine.push(lineInfo)
+                                    block.childrenLine.push(this.currPathUUID)
                                     block.children.push(this.tempBlockList[i].element.id)
                                 }
                             })
@@ -199,8 +203,18 @@ export class Flow {
         });
     }
 
-    import(blockList) {
+    import(output) {
+        this.canvas.innerHTML = output.html
+        let blocks = JSON.parse(output.blockList)
+        let lineList = JSON.parse(output.lineList)
+        blocks = blocks.map(block => ({ ...block, element: document.getElementById(block.id) }))
 
+        this.lineList = lineList
+        this.tempBlockList = blocks;
+        blocks.map(b => {
+            this.handleTempBlcokDrag(b);
+            this.handlePointDrag(b)
+        })
     }
 }
 

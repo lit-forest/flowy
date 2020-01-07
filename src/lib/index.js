@@ -6,7 +6,11 @@ export const initFlowy = (canvasSelector) => {
     const flow = new Flow(canvasSelector)
 
     return {
-        output: () => flow.tempBlockList,
+        output: () => ({
+            blockList: JSON.stringify(flow.tempBlockList),
+            lineList: JSON.stringify(flow.lineList),
+            html: flow.canvas.innerHTML
+        }),
         import: output => flow.import(output)
     }
 }

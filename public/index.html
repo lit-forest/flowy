@@ -24,7 +24,29 @@
       <div class="App">
       </div>
     </div>
+    <div class="actions">
+      <button id='output'>output</button>
+      <button id='input'>input</button>
+    </div>
   </div>
+  <script>
+    const output = document.querySelector('#output')
+    const input = document.querySelector('#input')
+
+    output.addEventListener('click', () => {
+      const blockConten = flowy.output()
+      localStorage.setItem('blockList', blockConten.blockList)
+      localStorage.setItem('lineList', blockConten.lineList)
+      localStorage.setItem('html', blockConten.html)
+    })
+
+    input.addEventListener('click', () => {
+      const blockList = localStorage.getItem('blockList')
+      const lineList = localStorage.getItem('lineList')
+      const html = localStorage.getItem('html')
+      flowy.import({ blockList, html, lineList })
+    })
+  </script>
 </body>
 
 </html>
