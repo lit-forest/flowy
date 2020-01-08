@@ -1,4 +1,4 @@
-import { curry } from '../index'
+import { curry } from '../../fun'
 
 export const Just = x => ({
     map: f => Just(f(x)),
@@ -27,11 +27,14 @@ export const maybe = curry(
     (x, f, m) => m.isNothing ? x : f(m.getOrElse())
 )
 
+export const isNothing = value => Maybe(value).isNothing()
+
 export default {
     Just,
     Nothing,
     Maybe,
     maybe,
+    isNothing,
     of: Maybe
 }
 

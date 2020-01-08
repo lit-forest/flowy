@@ -1,7 +1,7 @@
 import { initSVG, drowBezierCurve, deleteLine } from './svg'
 import { Flow } from './drag'
 import { removeNode } from './utils/dom'
-import { emptyFun } from './utils/fun'
+import './utils/model'
 
 export const initFlowy = (canvasSelector) => {
     initSVG(canvasSelector)

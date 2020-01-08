@@ -62,4 +62,4 @@ export const bezierPath = (x1, y1, x2, y2, tension) => {
  * 删除svg的连接线
  * @param {*} id 
  */
-export const deleteLine = (id) => removeNode(`#${id}`)
+export const deleteLine = id => removeNode(`#${id}`)
