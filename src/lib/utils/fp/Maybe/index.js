@@ -27,7 +27,9 @@ export const maybe = curry(
     (x, f, m) => m.isNothing ? x : f(m.getOrElse())
 )
 
-export const isNothing = value => Maybe(value).isNothing()
+export const isNothing = value => Maybe(value).isNothing
+
+export const getOrElse = defaultValue => value => Maybe(value).getOrElse(defaultValue)
 
 export default {
     Just,

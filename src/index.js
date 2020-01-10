@@ -1,6 +1,6 @@
-import { initFlowy } from './lib'
+import { startCanvas } from './lib'
 import './lib/index.css'
 
-const flowy = initFlowy('.App')
+const flowy = startCanvas('.App')
 
 window.flowy = flowy

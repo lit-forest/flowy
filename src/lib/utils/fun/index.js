@@ -31,6 +31,15 @@ export const notEmpty = (x) => x != null
 
 export const def = x => typeof x !== 'undefined'
 
+export const map = curry((fn, xs) => xs.map(fn))
+
+export const filter = curry((fn, xs) => xs.filter(fn))
+
+export const tracker = x => {
+    console.log(x);
+    return x
+}
+
 
 const reduceFn = (f, init, arr) => {
     const len = arr.length

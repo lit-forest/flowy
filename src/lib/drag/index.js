@@ -1,6 +1,7 @@
 import { fromEvent } from 'rxjs';
 import { map, filter, tap, takeUntil, mergeMap } from 'rxjs/operators';
 
+import { initSVG } from '../svg'
 import { positionVerlapping, getOffset, getPositionAtCenter, getDistanceByXY } from '../utils/dom'
 import { setStyle, wrapNode, uuid } from './util'
 import { drowBezierCurve, deleteLine } from '../svg'
@@ -8,6 +9,7 @@ import { drowBezierCurve, deleteLine } from '../svg'
 export class Flow {
     constructor(selector) {
         this.canvas = document.querySelector(selector);
+        initSVG(selector)
         this.tempBlockList = [];
         this.lineList = [];
         this.currPathUUID = null;
@@ -78,14 +80,14 @@ export class Flow {
                     takeUntil(mouseup$),
                 )));
 
-        mousedrag$.subscribe(state => {
-            tempBlock.style.top = state.top + 'px'
-            tempBlock.style.left = state.left + 'px'
+        mousedrag$.subscribe(({ top, left }) => {
+            tempBlock.style.top = top + 'px'
+            tempBlock.style.left = left + 'px'
         })
     }
 
     handleTempBlcokDrag(block) {
-        const { element, parentsLine, childrenLine, parents, children } = block;
+        const { element, parentsLine, childrenLine } = block;
 
         const mousedown$ = fromEvent(element, 'mousedown')
         const mouseup$ = fromEvent(document, 'mouseup')
@@ -211,7 +213,7 @@ export class Flow {
 
         this.lineList = lineList
         this.tempBlockList = blocks;
-        blocks.map(b => {
+        blocks.forEach(b => {
             this.handleTempBlcokDrag(b);
             this.handlePointDrag(b)
         })
